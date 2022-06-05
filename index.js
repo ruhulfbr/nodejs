@@ -1,2 +1,2 @@
 
-console.log('Mouse ta onek distrub korteche');
+console.log('Mouse ta onek distrub');
