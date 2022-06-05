@@ -1,2 +1,2 @@
 
-console.log('Firt code');
+console.log('Mouse ta onek distrub korteche');
