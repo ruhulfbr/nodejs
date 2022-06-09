@@ -20,5 +20,3 @@ let resolveData = new Promise((resolve, reject)=>{
 resolveData.then(function(data){
     console.log(a+data);
 })
-
-
