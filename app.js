@@ -5,6 +5,18 @@ const morgan = require('morgan');
 const app = express();
 // app.use(morgan('dev));
 
+function customMidleWare(req, res, next){
+    console.log('I am in middleware');
+
+    if( req.url === '/about' ){
+        res.send('<h1>this page is restricted by admin</h1>')
+    }
+
+    next()
+}
+
+app.use(customMidleWare)
+
 app.get('/contact', morgan('dev'), (req, res)=>{
     res.send('<h1>I am in Contact Page</h1>')
 });
