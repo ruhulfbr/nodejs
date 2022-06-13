@@ -11,7 +11,6 @@ app.get('/service', (req, res)=>{
     res.send('<h1>I am in Seevice Page</h1>')
 });
 
-
 app.get('/about', (req, res)=>{
     res.send('<h1>I am in about Page</h1>')
 });
