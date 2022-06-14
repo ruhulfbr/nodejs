@@ -11,11 +11,18 @@ function customMidleWare(req, res, next){
     if( req.url === '/about' ){
         res.send('<h1>this page is restricted by admin</h1>')
     }
-
     next()
 }
 
-app.use(customMidleWare)
+function tinyLogger(){
+    return (req, res, next) =>{
+        console.log(`This is from tiny logger ${req.method} - ${req.url}`);
+        next();
+    }
+}
+
+const middlewares = [customMidleWare, tinyLogger()]
+app.use(middlewares)
 
 app.get('/contact', morgan('dev'), (req, res)=>{
     res.send('<h1>I am in Contact Page</h1>')
