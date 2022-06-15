@@ -10,7 +10,6 @@ app.use('/user', userRouter);
 app.get('/', (req, res)=>{
     res.send('<h1>I am in home page</h1>')
 });
-
 app.get('*', (req, res)=>{
     res.send('<h1>404 page not found</h1>')
 });
