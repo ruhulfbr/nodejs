@@ -1,19 +1,32 @@
+const baseViewPath = 'pages/user/';
+
 exports.login = (req, res)=>{
-    res.send('I am in login route');
+    res.render(baseViewPath+'login', {
+        title: 'Login Page'
+    })
 }
 
 exports.signup = (req, res)=>{
-    res.send('I am in logout route');
+    res.render(baseViewPath+'signup', {
+        title: 'Sign Page'
+    })
 }
 
 exports.logout = (req, res)=>{
-    res.send('I am in signup route');
+    res.render(baseViewPath+'logout', {
+        title: 'Logout Page'
+    })
 }
 
 exports.list = (req, res)=>{
-    res.send('I am in user list  route');
+    res.render(baseViewPath+'list', {
+        title: 'User List Page'
+    })
 }
 
 exports.show = (req, res)=>{
-    res.send('I am in user view  route and user id is '+ req.params.userId);
+    res.render(baseViewPath+'view', {
+        title: 'User View Page', 
+        user_id: req.params.userId
+    })
 }
