@@ -3,12 +3,11 @@ const express = require('express');
 const morgan = require('morgan');
 const app = express();
 const userRouter = require('./router')
-
+app.set('view engine', 'ejs')
 
 app.use('/user', userRouter);
-
 app.get('/', (req, res)=>{
-    res.send('<h1>I am in home page</h1>')
+    res.render('index')
 });
 app.get('*', (req, res)=>{
     res.send('<h1>404 page not found</h1>')
