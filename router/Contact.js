@@ -3,8 +3,8 @@ const contact = require('../controller/Contact')
 
 router.get('/', contact.list);
 router.post('/', contact.create);
-router.get('/:contactid', contact.show);
-router.put('/:contactid', contact.update);
-router.delete('/:contactid', contact.delete);
+router.get('/:id', contact.show);
+router.put('/:id', contact.update);
+router.delete('/:id', contact.delete);
 
 module.exports = router
