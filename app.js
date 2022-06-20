@@ -12,7 +12,9 @@ app.set('view engine', 'ejs')
 app.use('/contact', contactRouter);
 
 app.get('/', (req, res)=>{
-    res.send('<h1>This is home page</h1>')
+    res.render('home',{
+        title: 'Home Page'
+    });
 });
 
 app.get('*', (req, res)=>{

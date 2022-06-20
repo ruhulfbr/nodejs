@@ -4,10 +4,9 @@ const ContactModel = require('../model/Contact');
 exports.list = (req, res)=>{
     ContactModel.find()
         .then((data)=>{
-            res.status(200).json({
-                status: 'suceess',
-                message: 'Contact list found',
-                data: data
+            res.render('contacts',{
+                title: 'Contacts',
+                contacts: data
             });
         })
         .catch((err)=>{
@@ -39,6 +38,7 @@ exports.show = (req, res)=>{
 }
 
 exports.create = (req, res)=>{
+   
     let {name, email, phone} = req.body
 
     if(name && email && phone){
@@ -50,17 +50,22 @@ exports.create = (req, res)=>{
     
         contactData.save()
         .then((data)=>{
-            res.status(200).json({
-                status: 'suceess',
-                message: 'New contact successfully created',
-                data: data
-            });
+            // res.status(200).json({
+            //     status: 'suceess',
+            //     message: 'New contact successfully created',
+            //     data: data
+            // });
+
+            console.log(data);
+            res.redirect('/contact')
+
         })
         .catch((err)=>{
-            res.status(500).json({
-                status: 'error',
-                message: err
-            });
+            // res.status(500).json({
+            //     status: 'error',
+            //     message: err
+            // });
+            res.redirect('/contact')
         })
     }
     else{
