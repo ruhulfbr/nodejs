@@ -38,35 +38,49 @@ exports.show = (req, res)=>{
 }
 
 exports.create = (req, res)=>{
-   
-    let {name, email, phone} = req.body
+    let {name, email, phone, id} = req.body
 
     if(name && email && phone){
-        let contactData = new ContactModel({
-            name: name,
-            email: email,
-            phone: phone
-        })
-    
-        contactData.save()
-        .then((data)=>{
-            // res.status(200).json({
-            //     status: 'suceess',
-            //     message: 'New contact successfully created',
-            //     data: data
-            // });
 
-            console.log(data);
-            res.redirect('/contact')
+        if(id){
+            ContactModel.findByIdAndUpdate(id, {name, email, phone}, {new: true})
+            .then((data)=>{
+                console.log(data);
+                res.redirect('/contact')
+            })
+            .catch((err)=>{
+                console.log(err);
+                res.redirect('/contact')
+            })
+        }
+        else{
 
-        })
-        .catch((err)=>{
-            // res.status(500).json({
-            //     status: 'error',
-            //     message: err
-            // });
-            res.redirect('/contact')
-        })
+            let contactData = new ContactModel({
+                name: name,
+                email: email,
+                phone: phone
+            })
+        
+            contactData.save()
+            .then((data)=>{
+                // res.status(200).json({
+                //     status: 'suceess',
+                //     message: 'New contact successfully created',
+                //     data: data
+                // });
+
+                console.log(data);
+                res.redirect('/contact')
+
+            })
+            .catch((err)=>{
+                // res.status(500).json({
+                //     status: 'error',
+                //     message: err
+                // });
+                res.redirect('/contact')
+            })
+        }
     }
     else{
         res.status(500).json({
@@ -109,17 +123,20 @@ exports.delete = (req, res)=>{
 
    ContactModel.findByIdAndDelete(id)
    .then((data)=>{
-        res.status(200).json({
-            status: 'suceess',
-            message: 'Contact deleted successfull',
-            data: data
-        });
+        // res.status(200).json({
+        //     status: 'suceess',
+        //     message: 'Contact deleted successfull',
+        //     data: data
+        // });
+        res.redirect('/contact')
     })
     .catch((err)=>{
-        res.status(500).json({
-            status: 'error',
-            message: err
-        });
+        // res.status(500).json({
+        //     status: 'error',
+        //     message: err
+        // });
+
+        res.redirect('/contact')
     })
 
 }
