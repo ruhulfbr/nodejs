@@ -25,8 +25,18 @@ const postSchema = new Schema({
     },
     thumbnail: String,
     readTime: String,
-    likes: [Schema.Types.ObjectId],
-    dislikes: [Schema.Types.ObjectId],
+    likes: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: User
+        }
+    ],
+    dislikes: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: User
+        }
+    ],
     comments : [
         {
             type: Schema.Types.ObjectId,
