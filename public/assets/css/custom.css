@@ -1,0 +1,7 @@
+input.error, input.error:focus, input.error:focus-visible{
+    border: 1px solid #f23a2e;
+}
+
+label.error{
+    color: #f23a2e;
+}

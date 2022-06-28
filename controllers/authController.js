@@ -1,7 +1,7 @@
 exports.signup = (req, res, next)=>{
-    res.render({
-
-    }, '/pages/auth/signup')
+    res.render('pages/auth/signup',{
+        title: "Sign Up"
+    })
 }
 
 exports.login = (req, res, next)=>{

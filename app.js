@@ -20,15 +20,12 @@ const middlewares = [
     express.json()
 ];
 app.use(middlewares)
+app.use('/auth', authRouter)
 
 app.get('/', (req, res)=>{
-    res.render('pages/auth/signup', {
-        title: 'Signup'
+    res.render('pages/index', {
+        title: 'Home'
     });
-
-    // res.json({
-    //     title: 'Home Page'
-    // });
 });
 
 app.get('*', (req, res)=>{
