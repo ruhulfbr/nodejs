@@ -1,4 +1,7 @@
 exports.signup = (req, res, next)=>{
+
+    console.log(req.body);
+
     res.render('pages/auth/signup',{
         title: "Sign Up"
     })
