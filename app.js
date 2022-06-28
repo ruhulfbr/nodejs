@@ -22,9 +22,13 @@ const middlewares = [
 app.use(middlewares)
 
 app.get('/', (req, res)=>{
-    res.json({
-        title: 'Home Page'
+    res.render('pages/auth/signup', {
+        title: 'Signup'
     });
+
+    // res.json({
+    //     title: 'Home Page'
+    // });
 });
 
 app.get('*', (req, res)=>{
