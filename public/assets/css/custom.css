@@ -4,4 +4,5 @@ input.error, input.error:focus, input.error:focus-visible{
 
 label.error{
     color: #f23a2e;
+    display: none !important;
 }
