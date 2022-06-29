@@ -1,1 +1,45 @@
-<h1>Login Page</h1>
+<%- include('../../partials/head.ejs'); %>
+
+<div class="site-section bg-light h-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3"></div>
+            <div class="col-lg-6">
+                <div class="section-title mb-3">
+                    <h2>Login to your account</h2>
+                </div>
+                <form method="post" action="" id="user-login">
+                    <div class="row">
+                        <div class="col-md-12 form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" class="form-control form-control-lg" required />
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" class="form-control form-control-lg" required />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <input type="submit" value="Login" class="btn btn-primary py-3 px-5" />
+                            <a href="/auth/signup" class="ms-2">Don't have account? create one</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-3"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function(){
+        $('#user-login').validate();
+    });
+
+</script>
+
+<%- include('../../partials/footer.ejs'); %>
+
+

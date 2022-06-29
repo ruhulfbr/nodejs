@@ -39,9 +39,40 @@ exports.signupPost = async (req, res, next)=>{
 }
 
 exports.login = (req, res, next)=>{
-    res.render({
+    res.render('pages/auth/login', {
+        title: 'Login'
+    })
+}
 
-    }, '/pages/auth/login')
+exports.loginPost = async (req, res, next)=>{
+    const {email, password} = req.body;
+
+    try{
+        const user = await userModel.findOne({email});
+
+        if(!user){
+           return res.json({
+                status: 'error',
+                message : 'User not fund with this email'
+            })
+        }
+
+        let passwordMatch = await bcrypt.compare(password, user.password);
+        if( !passwordMatch ){
+            return res.json({
+                status: 'error',
+                message : 'Invalid password'
+            })
+        }
+
+        res.render('pages/auth/login', {
+            title: 'Login'
+        })
+
+    }catch(e){
+        console.log(e);
+        next(e)
+    }
 }
 
 exports.logout = (req, res, next)=>{
