@@ -9,30 +9,40 @@
                     <h2>Create a new account</h2>
                     <p class="text-danger">All fields are required</p>
                 </div>
-                <form method="post" action="" id="user-sign">
+                <form method="post" action="" id="user-sign" autocomplete="off">
                     <div class="row">
                         <div class="col-md-12 form-group">
-                            <label for="name">Name</label>
-                            <input type="text" id="name" name="name" class="form-control form-control-lg" required />
-                        </div>
-                        <div class="col-md-12 form-group">
                             <label for="username">Username (Must be unique)</label>
-                            <input type="text" id="username" name="username" class="form-control form-control-lg" required />
+                            <input type="text" id="username" name="username" value="<%= value.username ? value.username : '' %>" class="form-control form-control-lg <%= errors.username ? 'is-invalid error' : '' %>" required />
+
+                            <div class="invalid-feedback">
+                                <%= errors.username ? errors.username : '' %>
+                            </div>
+
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12 form-group">
                             <label for="email">Email (Must be unique)</label>
-                            <input type="email" id="email" name="email" class="form-control form-control-lg" required />
+                            <input type="email" id="email" name="email" value="<%= value.email ? value.email : '' %>" class="form-control form-control-lg <%= errors.email ? 'is-invalid error' : '' %>" required />
+                            <div class="invalid-feedback">
+                                <%= errors.email ? errors.email : '' %>
+                            </div>
                         </div>
                         <div class="col-md-12 form-group">
                             <label for="password">Password</label>
-                            <input type="password" id="password" name="password" class="form-control form-control-lg" required />
+                            <input type="password" id="password" name="password" value="<%= value.password ? value.password : '' %>" class="form-control form-control-lg <%= errors.password ? 'is-invalid error' : '' %>" required />
+                            <div class="invalid-feedback">
+                                <%= errors.password ? errors.password : '' %>
+                            </div>
                         </div>
 
                         <div class="col-md-12 form-group">
                             <label for="confirm_password">Confirm Password</label>
-                            <input type="password" id="confirm_password" name="confirm_password" class="form-control form-control-lg" required />
+                            <input type="password" id="confirm_password" name="confirm_password" class="form-control form-control-lg <%= errors.confirm_password ? 'is-invalid error' : '' %>" required />
+                            <div class="invalid-feedback">
+                                <%= errors.confirm_password ? errors.confirm_password : '' %>
+                            </div>
                         </div>
 
                     </div>

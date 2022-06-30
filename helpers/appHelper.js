@@ -1,0 +1,1 @@
+exports.validationErrorformatter = (errors) => errors.msg;
