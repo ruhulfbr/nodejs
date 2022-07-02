@@ -20,14 +20,18 @@
                             <a href="categories.html" class="nav-link text-left">Health</a>
                         </li>
                         <li><a href="categories.html" class="nav-link text-left">Design</a></li>
+
+                        <%  if(!isLogin){ %>
                         <li>
                             <a href="/auth/login" class="nav-link text-left">Login</a>
                         </li>
                         <li><a href="/auth/signup" class="nav-link text-left">Sign Up</a></li>
+
+                        <% }else{ %>
                         <li>
                             <a href="/auth/logout" class="nav-link text-left">Logout</a>
                         </li>
-
+                        <% } %>
                     </ul>
                 </nav>
             </div>

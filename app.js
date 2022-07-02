@@ -8,6 +8,8 @@ var MongoDBStore = require('connect-mongodb-session')(session);
 //Innner Modules
 const authRouter = require('./routes/authRoute')
 const {bindUserWithRequest} = require('./middleware/authMiddleware')
+const setLocals = require('./middleware/setLocals')
+
 
 //Others variables
 const MONGODB_URL = 'mongodb://localhost:27017/blog';
@@ -46,7 +48,8 @@ const middlewares = [
         },
         store: store,
     }),
-    bindUserWithRequest()
+    bindUserWithRequest(),
+    setLocals()
 ];
 app.use(middlewares)
 app.use('/auth', authRouter)

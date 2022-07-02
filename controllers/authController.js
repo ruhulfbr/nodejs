@@ -96,14 +96,12 @@ exports.loginPost = async (req, res, next)=>{
             })
         }
 
+        console.log(user);
+
         req.session.isLogin = true;
         req.session.user = user;
 
-        res.render('pages/auth/login', {
-            title: 'Login',
-            errors: {},
-            value: {}
-        })
+        res.redirect('/auth/login') 
 
     }catch(e){
         console.log(e);
@@ -112,5 +110,7 @@ exports.loginPost = async (req, res, next)=>{
 }
 
 exports.logout = (req, res, next)=>{
-
+    req.session.destroy((err) => {
+        res.redirect('/auth/login') 
+    })
 }

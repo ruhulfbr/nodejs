@@ -6,9 +6,17 @@ exports.bindUserWithRequest = () =>{
            next();
         }
 
+        console.log('req.session = ', req.session);
+
         try{
-            let user = await userModel.findById(req.session.user._id)
-            req.user = user;
+
+            if(req.hasOwnProperty('session') && req.session.hasOwnProperty('user')){
+                let user = await userModel.findById(req.session.user._id)
+                req.user = user;
+            }
+            else{
+                req.user = null;
+            }
 
             next();
         }
