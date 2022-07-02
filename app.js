@@ -3,8 +3,26 @@ const express = require('express');
 const mongoose = require('mongoose')
 const morgan = require('morgan')
 const session = require('express-session')
+var MongoDBStore = require('connect-mongodb-session')(session);
 
+//Innner Modules
 const authRouter = require('./routes/authRoute')
+const {bindUserWithRequest} = require('./middleware/authMiddleware')
+
+//Others variables
+const MONGODB_URL = 'mongodb://localhost:27017/blog';
+
+//Connect Mongo DB session
+const store = new MongoDBStore({
+    uri: MONGODB_URL,
+    collection: 'sessions',
+    expires: 1000 * 60 * 60 * 2
+});
+  
+  // Catch errors
+store.on('error', function(error) {
+    console.log(error);
+});
 
 const app = express();
 
@@ -23,8 +41,12 @@ const middlewares = [
         secret: process.env.SERRET_KEY || 'SIMPLE-BLOG',
         resave: false,
         saveUninitialized: true,
-        cookie: { maxAge: 60000*1000 }
-    })
+        cookie: {
+            maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
+        },
+        store: store,
+    }),
+    bindUserWithRequest()
 ];
 app.use(middlewares)
 app.use('/auth', authRouter)
@@ -39,7 +61,7 @@ app.get('*', (req, res)=>{
     res.send('<h1>404 page not found</h1>')
 });
 
-mongoose.connect('mongodb://localhost:27017/blog', {useNewUrlParser: true})
+mongoose.connect(MONGODB_URL, {useNewUrlParser: true})
 .then(()=>{
     console.log('Database conncted');
     app.listen(PORT, (err)=>{

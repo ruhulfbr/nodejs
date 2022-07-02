@@ -57,6 +57,8 @@ exports.login = (req, res, next)=>{
 
     console.log(req.session.isLogin, req.session.user);
 
+    console.log('req.user', req.user);
+
     res.render('pages/auth/login', {
         title: 'Login',
         errors: {},
