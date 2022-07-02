@@ -6,9 +6,6 @@ const userModel = require('../models/User');
 const helper = require('../helpers/appHelper');
 
 exports.signup = (req, res, next)=>{
-
-    req.session.name = "Sona bondu"
-
     res.render('pages/auth/signup',{
         title: "Sign Up",
         errors:{},
@@ -47,6 +44,8 @@ exports.signupPost = async (req, res, next)=>{
             title: "Sign Up"
         })
 
+        res.redirect('auth/login');
+
     }catch(e){
         console.log(e);
         next(e);
@@ -56,7 +55,7 @@ exports.signupPost = async (req, res, next)=>{
 
 exports.login = (req, res, next)=>{
 
-    console.log(req.session.name);
+    console.log(req.session.isLogin, req.session.user);
 
     res.render('pages/auth/login', {
         title: 'Login',
@@ -94,6 +93,9 @@ exports.loginPost = async (req, res, next)=>{
                 message : 'Invalid password'
             })
         }
+
+        req.session.isLogin = true;
+        req.session.user = user;
 
         res.render('pages/auth/login', {
             title: 'Login',

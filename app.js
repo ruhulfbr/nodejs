@@ -23,7 +23,7 @@ const middlewares = [
         secret: process.env.SERRET_KEY || 'SIMPLE-BLOG',
         resave: false,
         saveUninitialized: true,
-        cookie: { maxAge: 60000 }
+        cookie: { maxAge: 60000*1000 }
     })
 ];
 app.use(middlewares)
