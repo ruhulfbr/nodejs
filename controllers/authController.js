@@ -3,9 +3,12 @@ const {validationResult} = require('express-validator')
 const userModel = require('../models/User');
 
 //load helpers
-const helper = require('../helpers/appHelper')
+const helper = require('../helpers/appHelper');
 
 exports.signup = (req, res, next)=>{
+
+    req.session.name = "Sona bondu"
+
     res.render('pages/auth/signup',{
         title: "Sign Up",
         errors:{},
@@ -52,6 +55,9 @@ exports.signupPost = async (req, res, next)=>{
 }
 
 exports.login = (req, res, next)=>{
+
+    console.log(req.session.name);
+
     res.render('pages/auth/login', {
         title: 'Login',
         errors: {},

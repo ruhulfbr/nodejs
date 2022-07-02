@@ -2,6 +2,7 @@ const PORT = process.env.PORT || 8080
 const express = require('express');
 const mongoose = require('mongoose')
 const morgan = require('morgan')
+const session = require('express-session')
 
 const authRouter = require('./routes/authRoute')
 
@@ -17,7 +18,13 @@ const middlewares = [
     morgan('dev'),
     express.static('public'),
     express.urlencoded({ extended: true }),
-    express.json()
+    express.json(),
+    session({
+        secret: process.env.SERRET_KEY || 'SIMPLE-BLOG',
+        resave: false,
+        saveUninitialized: true,
+        cookie: { maxAge: 60000 }
+    })
 ];
 app.use(middlewares)
 app.use('/auth', authRouter)
