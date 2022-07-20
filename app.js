@@ -6,9 +6,7 @@ const morgan = require('morgan')
 const session = require('express-session')
 const flash = require('connect-flash');
 var MongoDBStore = require('connect-mongodb-session')(session);
-
-//load helpers
-const helper = require('./helpers/appHelper');
+const config = require('config')
 
 //Routes
 const authRouter = require('./routes/authRoute')
@@ -64,6 +62,9 @@ if( app.get('env').toLowerCase() === 'development' ){
 app.use(middlewares)
 app.use('/auth', authRouter)
 app.use('/dashboard', dashboardRoute)
+
+console.log('App name', config.get('title'));
+
 
 app.get('/', (req, res)=>{
     res.render('pages/index', {
