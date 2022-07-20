@@ -55,8 +55,8 @@ exports.signupPost = async (req, res, next)=>{
 
 exports.login = (req, res, next)=>{
 
-    console.log(req.session.isLogin, req.session.user);
-
+    console.log('req.session.isLogin', req.session.isLogin);
+    console.log('req.session.user', req.session.user);
     console.log('req.user', req.user);
 
     res.render('pages/auth/login', {
@@ -100,9 +100,13 @@ exports.loginPost = async (req, res, next)=>{
 
         req.session.isLogin = true;
         req.session.user = user;
-
-        res.redirect('/auth/login') 
-
+        req.session.save((err)=>{
+           if(err){
+                console.log(err);
+                return next(err)
+           }
+           res.redirect('/dashboard') 
+        });
     }catch(e){
         console.log(e);
         next(e)
@@ -111,6 +115,10 @@ exports.loginPost = async (req, res, next)=>{
 
 exports.logout = (req, res, next)=>{
     req.session.destroy((err) => {
+        if(err){
+            console.log(err);
+            return next(err)
+        }
         res.redirect('/auth/login') 
     })
 }

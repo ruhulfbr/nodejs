@@ -3,27 +3,34 @@ const userModel = require('../models/User')
 exports.bindUserWithRequest = () =>{
     return async (req, res, next) => {
         if( !req.session.isLogin ){
-           next();
+          return next();
         }
 
-        console.log('req.session = ', req.session);
-
         try{
-
-            if(req.hasOwnProperty('session') && req.session.hasOwnProperty('user')){
-                let user = await userModel.findById(req.session.user._id)
-                req.user = user;
-            }
-            else{
-                req.user = null;
-            }
-
+            let user = await userModel.findById(req.session.user._id)
+            req.user = user;
             next();
         }
         catch(e){
-            console.log(e)
+            console.log('Some Error',e)
             next(e);
         }
 
     }
+}
+
+exports.isNotAuthenticated = (req, res, next) =>{
+    if( req.session.isLogin ){
+        return res.redirect('back');
+    }
+
+    next()
+}
+
+exports.isAuthenticated = (req, res, next) =>{
+    if( !req.session.isLogin ){
+        return res.redirect('/auth/login')
+    }
+
+    next()
 }

@@ -5,8 +5,12 @@ const morgan = require('morgan')
 const session = require('express-session')
 var MongoDBStore = require('connect-mongodb-session')(session);
 
-//Innner Modules
+//Routes
 const authRouter = require('./routes/authRoute')
+const dashboardRoute = require('./routes/dashboardRoute')
+
+
+//Middlewares
 const {bindUserWithRequest} = require('./middleware/authMiddleware')
 const setLocals = require('./middleware/setLocals')
 
@@ -28,9 +32,6 @@ store.on('error', function(error) {
 
 const app = express();
 
-app.use(authRouter)
-
-
 app.set('view engine', 'ejs')
 app.set('views', 'views')
 
@@ -42,7 +43,7 @@ const middlewares = [
     session({
         secret: process.env.SERRET_KEY || 'SIMPLE-BLOG',
         resave: false,
-        saveUninitialized: true,
+        saveUninitialized: false,
         cookie: {
             maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
         },
@@ -53,6 +54,7 @@ const middlewares = [
 ];
 app.use(middlewares)
 app.use('/auth', authRouter)
+app.use('/dashboard', dashboardRoute)
 
 app.get('/', (req, res)=>{
     res.render('pages/index', {
