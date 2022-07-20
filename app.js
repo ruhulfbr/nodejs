@@ -1,3 +1,4 @@
+require('dotenv').config()
 const PORT = process.env.PORT || 8080
 const express = require('express');
 const mongoose = require('mongoose')
@@ -5,6 +6,9 @@ const morgan = require('morgan')
 const session = require('express-session')
 const flash = require('connect-flash');
 var MongoDBStore = require('connect-mongodb-session')(session);
+
+//load helpers
+const helper = require('./helpers/appHelper');
 
 //Routes
 const authRouter = require('./routes/authRoute')
@@ -36,7 +40,6 @@ app.set('view engine', 'ejs')
 app.set('views', 'views')
 
 const middlewares = [
-    morgan('dev'),
     express.static('public'),
     express.urlencoded({ extended: true }),
     express.json(),
@@ -53,6 +56,11 @@ const middlewares = [
     bindUserWithRequest(),
     setLocals()
 ];
+
+if( app.get('env').toLowerCase() === 'development' ){
+    app.use(morgan('dev'))
+}
+
 app.use(middlewares)
 app.use('/auth', authRouter)
 app.use('/dashboard', dashboardRoute)
