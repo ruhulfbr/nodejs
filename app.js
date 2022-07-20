@@ -3,12 +3,12 @@ const express = require('express');
 const mongoose = require('mongoose')
 const morgan = require('morgan')
 const session = require('express-session')
+const flash = require('connect-flash');
 var MongoDBStore = require('connect-mongodb-session')(session);
 
 //Routes
 const authRouter = require('./routes/authRoute')
 const dashboardRoute = require('./routes/dashboardRoute')
-
 
 //Middlewares
 const {bindUserWithRequest} = require('./middleware/authMiddleware')
@@ -49,6 +49,7 @@ const middlewares = [
         },
         store: store,
     }),
+    flash(),
     bindUserWithRequest(),
     setLocals()
 ];

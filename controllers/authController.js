@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt')
 const {validationResult} = require('express-validator')
 const userModel = require('../models/User');
+const Flash = require('../utils/Flash')
 
 //load helpers
 const helper = require('../helpers/appHelper');
@@ -9,7 +10,8 @@ exports.signup = (req, res, next)=>{
     res.render('pages/auth/signup',{
         title: "Sign Up",
         errors:{},
-        value: {}
+        value: {},
+        flashMessage: Flash.getMessage(req)
     })
 }
 
@@ -17,10 +19,14 @@ exports.signupPost = async (req, res, next)=>{
 
     const errors = validationResult(req).formatWith(helper.validationErrorformatter)
     if(!errors.isEmpty()){
+
+        req.flash('error', 'Validation error occured');
+
         return res.render('pages/auth/signup',{
             title: "Sign Up",
             errors:errors.mapped(),
-            value: req.body
+            value: req.body,
+            flashMessage: Flash.getMessage(req)
         })
     }
     let postData = req.body
@@ -35,16 +41,10 @@ exports.signupPost = async (req, res, next)=>{
             password: hashPassword
         })
 
-        let newCreatedUser = await user.save();
+        await user.save();
 
-        console.log(newCreatedUser);
-
-        console.log('user created successfully', newCreatedUser);
-        res.render('pages/auth/signup',{
-            title: "Sign Up"
-        })
-
-        res.redirect('auth/login');
+        req.flash('success', 'User created successfully');
+        res.redirect('/auth/login');
 
     }catch(e){
         console.log(e);
@@ -54,49 +54,53 @@ exports.signupPost = async (req, res, next)=>{
 }
 
 exports.login = (req, res, next)=>{
-
-    console.log('req.session.isLogin', req.session.isLogin);
-    console.log('req.session.user', req.session.user);
-    console.log('req.user', req.user);
-
     res.render('pages/auth/login', {
         title: 'Login',
         errors: {},
-        value: {}
+        value: {},
+        flashMessage: Flash.getMessage(req)
     })
 }
 
 exports.loginPost = async (req, res, next)=>{
     const errors = validationResult(req).formatWith(helper.validationErrorformatter)
     if(!errors.isEmpty()){
+        req.flash('error', 'Validation error occured');
         return res.render('pages/auth/login',{
             title: "Login",
             errors:errors.mapped(),
-            value: req.body
+            value: req.body,
+            flashMessage: Flash.getMessage(req)
         })
     }
 
     const {email, password} = req.body;
 
     try{
+
+        let hasError = false;
         const user = await userModel.findOne({email});
 
         if(!user){
-           return res.json({
-                status: 'error',
-                message : 'User not fund with this email'
-            })
+            hasError = true
+            req.flash('error', 'User not fund with this email');
+        }
+        else{
+            let passwordMatch = await bcrypt.compare(password, user.password);
+            if( !passwordMatch ){
+                hasError = true
+                req.flash('error', 'Invalid password');
+            }
         }
 
-        let passwordMatch = await bcrypt.compare(password, user.password);
-        if( !passwordMatch ){
-            return res.json({
-                status: 'error',
-                message : 'Invalid password'
+        if(hasError){
+            return res.render('pages/auth/login',{
+                title: "Login",
+                errors:errors.mapped(),
+                value: req.body,
+                flashMessage: Flash.getMessage(req)
             })
         }
-
-        console.log(user);
 
         req.session.isLogin = true;
         req.session.user = user;
@@ -105,6 +109,8 @@ exports.loginPost = async (req, res, next)=>{
                 console.log(err);
                 return next(err)
            }
+
+           req.flash('success', 'Successfully Logged in');
            res.redirect('/dashboard') 
         });
     }catch(e){
