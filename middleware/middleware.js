@@ -8,7 +8,6 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 const {bindUserWithRequest} = require('../middleware/authMiddleware')
 const setLocals = require('../middleware/setLocals')
 
-
 //Others variables
 const MONGODB_URL = 'mongodb://localhost:27017/blog';
 
@@ -25,7 +24,7 @@ store.on('error', function(error) {
 });
 
 const middlewares = [
-    morgan('dev'),
+    //morgan('dev'),
     express.static('public'),
     express.urlencoded({ extended: true }),
     express.json(),

@@ -7,6 +7,23 @@
             <p class="lead">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt vitae possimus porro optio autem qui aliquam perspiciatis quidem aliquid non harum, quam, nostrum quos saepe doloribus velit laborum! Nam, totam!
             </p>
+
+            <h5>User Information</h5>
+            <p>Name: <%= user.username %> </p>
+            <p>Email: <%= user.email %> </p>
+            <p>Register at: <%= user.createdAt %> </p>
+
+            <h5 style="border-bottom: 1px solid;" class="pb-1">Update profile photo</h5>
+            <form method="post" action="/dashboard/upload-file" enctype="multipart/form-data">
+                <br>
+                <input type="file" name="profile-photo" required />
+
+                <br>
+                <br>
+                <button class="btn btn-success" type="submit">Upload</button>
+
+            </form>
+
         </div>
     </div>
 </div>
