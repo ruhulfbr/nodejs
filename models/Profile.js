@@ -22,7 +22,7 @@ const profileSchema = new Schema({
         type: String,
         trim: true
     },
-    profilePic: string,
+    profilePic: String,
     links: {
         facebook: String,
         website: String,
