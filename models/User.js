@@ -17,6 +17,10 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    profilePic: {
+        type: String,
+        default: '/uploads/nophoto.jpg'
+    },
     profile: {
         type: Schema.Types.ObjectId,
         ref: 'Profile'

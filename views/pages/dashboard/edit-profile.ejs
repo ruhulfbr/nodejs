@@ -2,7 +2,7 @@
 
 <div class="site-section bg-light h-100">
     <div class="container">
-        <h4>Create Profile</h4>
+        <h4>Edit Profile</h4>
         <p class="text-danger">All fields are required</p>
 
         <form action="/dashboard/upload-profile-photo" method="post" id="uplaod-profile-photo" enctype="multipart/form-data">
@@ -11,13 +11,14 @@
                     <img src="<%= user.profilePic  %>" width="120" alt="">
                     <input type="file" class="d-none" name="profile-photo" id="profile-photo" onchange="$('#uplaod-profile-photo').submit();" accept="image/*" required>
                     <div class="mt-2">
-                        <button class="btn btn-sm btn-primary" type="button" id="choose-photo" onclick="$('#profile-photo').click();">Choose Photo</button>
+                        <button class="btn btn-sm btn-primary" type="button" id="choose-photo" onclick="$('#profile-photo').click();">Change</button>
+                        <a href="/dashboard/remove-profile-photo" class="btn btn-sm btn-danger">Remove</a>
                     </div>
                 </div>
             </div>
         </form>
 
-        <form action="/dashboard/create-profile" method="post" id="create-profile">
+        <form action="/dashboard/update-profile" method="post" id="create-profile">
             <div class="row">        
                 <div class="col-md-6">
                     <div class="form-group">
@@ -104,7 +105,7 @@
     
                 <div class="col-md-12 mt-2">
                     <div class="form-group">
-                        <button class="btn btn-success" type="submit" value="">Create</button>
+                        <button class="btn btn-success" type="submit" value="">Update</button>
                     </div>
                 </div>
             </div>

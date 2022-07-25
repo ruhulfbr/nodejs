@@ -9,7 +9,7 @@ module.exports = (page) =>{
             }
 
             if(page === 'create-profile' && profile){
-                return res.redirect('/dashboard');
+                return res.redirect('/dashboard/edit-profile');
             }
 
             next();

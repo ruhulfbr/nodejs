@@ -1,6 +1,16 @@
-
+const {validationResult} = require('express-validator')
+const Flash = require('../utils/Flash')
 //load helpers
 const helper = require('../helpers/appHelper');
+
+const userModel = require('../models/User')
+const userProfileModel = require('../models/Profile');
+const { set } = require('mongoose');
+const fs = require('fs');
+
+
+//Some Constant
+let defaultPhoto = '/uploads/nophoto.jpg';
 
 exports.dashboard = (req, res, next)=>{
     res.render('pages/dashboard/index',{
@@ -16,4 +26,176 @@ exports.createProfile = (req, res, next)=>{
         errors:{},
         value: {}
     })
+}
+
+exports.createProfilePost = async (req, res, next)=>{
+    
+    const errors = validationResult(req).formatWith(helper.validationErrorformatter)
+    if(!errors.isEmpty()){
+        req.flash('error', 'Validation error occured');
+        return res.render('pages/dashboard/create-profile',{
+            title: "Create Profile",
+            errors: errors.mapped(),
+            value: req.body,
+            flashMessage: Flash.getMessage(req)
+        })
+    }
+    else{
+
+        let postData = req.body
+        let profileData = {
+            user: req.user._id,
+            name: postData.name,
+            title: postData.title,
+            bio: postData.bio,
+            profilePic: req.user.profilePic,
+            links:{
+                facebook: postData.facebook,
+                twitter: postData.twitter,
+                website: postData.website,
+                github: postData.github
+            }
+        }
+        try{
+            let userProfile = await userProfileModel.create(profileData)
+
+            console.log('userProfile', userProfile);
+            await userModel.findByIdAndUpdate(
+                req.user._id, 
+                {$set: {profile: userProfile._id}}
+            )
+
+
+            req.flash('success', 'Profile created successfully');
+            res.redirect('/dashboard');
+        }
+        catch(e){
+            next(e);
+        }
+    }
+}
+
+exports.uploadProfilePhoto = async (req, res, next)=>{
+
+    if(req.file){
+        try{
+            let profilePic = '/uploads/'+req.file.filename
+            await userModel.findByIdAndUpdate(
+                req.user._id, 
+                {$set: {profilePic: profilePic}}
+            )
+
+            let profile = await userProfileModel.findOne({user:req.user._id})
+            if(profile){
+                await userProfileModel.findByIdAndUpdate(
+                    profile._id, 
+                    {$set: {profilePic: profilePic}}
+                )
+            }
+
+            if( req.user.profilePic !== defaultPhoto ){
+                var filePath = `public${req.user.profilePic}`; 
+                fs.unlinkSync(filePath);
+            }
+
+            req.flash('success', 'Profile photo uploaded successfully');
+            res.redirect('back');
+        }
+        catch(e){
+            next(e);
+        }
+
+    }
+    else{
+        req.flash('error', 'Photo no uploaded, maybe something went wrong');
+        return res.render('pages/dashboard/create-profile',{
+            title: "Create Profile",
+            errors:{},
+            value: {},
+            flashMessage: Flash.getMessage(req)
+        })
+    }
+}
+
+exports.removeProfilePhoto = async (req, res, next)=>{
+
+    try{
+        var filePath = `public${req.user.profilePic}`; 
+        fs.unlinkSync(filePath);
+
+        await userModel.findByIdAndUpdate(
+            req.user._id, 
+            {$set: {profilePic: defaultPhoto}}
+        )
+
+        let profile = await userProfileModel.findOne({user:req.user._id})
+        if(profile){
+            await userProfileModel.findByIdAndUpdate(
+                profile._id, 
+                {$set: {profilePic: defaultPhoto}}
+            )
+        }
+
+        req.flash('success', 'Profile remove successfully');
+        res.redirect('/dashboard/edit-profile');
+    }
+    catch(e){
+        next(e);
+    }
+
+
+}
+
+exports.editProfile = async (req, res, next)=>{
+    let userProfile = await userProfileModel.findOne({user: req.user._id});
+        userProfile.facebook = userProfile.links.facebook
+        userProfile.github = userProfile.links.github
+        userProfile.twitter = userProfile.links.twitter
+        userProfile.website = userProfile.links.website
+
+    res.render('pages/dashboard/edit-profile',{
+        title: "Edit Profile",
+        errors:{},
+        value: userProfile
+    })
+}
+
+exports.updateProfile = async (req, res, next)=>{
+    
+    const errors = validationResult(req).formatWith(helper.validationErrorformatter)
+    if(!errors.isEmpty()){
+        req.flash('error', 'Validation error occured');
+        return res.render('pages/dashboard/edit-profile',{
+            title: "Edit Profile",
+            errors: errors.mapped(),
+            value: req.body,
+            flashMessage: Flash.getMessage(req)
+        })
+    }
+    else{
+
+        let postData = req.body
+        let profileData = {
+            user: req.user._id,
+            name: postData.name,
+            title: postData.title,
+            bio: postData.bio,
+            profilePic: req.user.profilePic,
+            links:{
+                facebook: postData.facebook,
+                twitter: postData.twitter,
+                website: postData.website,
+                github: postData.github
+            }
+        }
+        try{
+            let userProfile = await userProfileModel.findOneAndUpdate({user: req.user._id}, {$set: profileData})
+
+            req.flash('success', 'Profile updated successfully');
+            res.redirect('/dashboard/edit-profile');
+        }
+        catch(e){
+            next(e);
+        }
+    }
 }
