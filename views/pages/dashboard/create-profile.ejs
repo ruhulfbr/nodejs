@@ -92,7 +92,7 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="">Profile Photo</label>
-                        <input type="file" class="bt-form-control <%= errors.profile_photo ? 'is-invalid error' : '' %>" name="profile_photo" />
+                        <input type="file" class="bt-form-control <%= errors.profile_photo ? 'is-invalid error' : '' %>" name="profile_photo" required accept="image/*" />
 
                         <div class="invalid-feedback">
                             <%= errors.profile_photo ? errors.profile_photo : '' %>
