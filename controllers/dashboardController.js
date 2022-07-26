@@ -148,10 +148,10 @@ exports.removeProfilePhoto = async (req, res, next)=>{
 
 exports.editProfile = async (req, res, next)=>{
     let userProfile = await userProfileModel.findOne({user: req.user._id});
-        userProfile.facebook = userProfile.links.facebook
-        userProfile.github = userProfile.links.github
-        userProfile.twitter = userProfile.links.twitter
-        userProfile.website = userProfile.links.website
+        userProfile.facebook = userProfile.links.facebook ? userProfile.links.facebook : '';
+        userProfile.github   = userProfile.links.github ? userProfile.links.github : ''
+        userProfile.twitter  = userProfile.links.twitter ? userProfile.links.twitter : ''
+        userProfile.website  = userProfile.links.website ? userProfile.links.website : ''
 
     res.render('pages/dashboard/edit-profile',{
         title: "Edit Profile",
