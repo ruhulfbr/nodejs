@@ -1,7 +1,5 @@
 const {body}  = require('express-validator')
 
-console.log('body', body);
-
 module.exports = [
     body('name')
         .trim()
@@ -30,5 +28,15 @@ module.exports = [
     body('github')
         .trim()
         .not().notEmpty().withMessage('Github profile URL field is required')
-        .isURL().withMessage('Github profile URL field must be a valid URL')
+        .isURL().withMessage('Github profile URL field must be a valid URL'),
+    body('profile_photo')
+        .custom(async (profile_photo, {req}) => {
+            if( req.file ){
+                return true;
+            }
+            else{
+                throw new Error('Profile photo is required')
+            }
+            
+        })
 ];

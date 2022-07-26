@@ -47,7 +47,7 @@ module.exports = app =>{
             });
         }
 
-        console.log('error.message', error.message);
+        console.log('error.message', error);
 
         return res.render('pages/error/500', {
             title: 'Internal Server Error'

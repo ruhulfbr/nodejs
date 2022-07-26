@@ -29,9 +29,13 @@ exports.createProfile = (req, res, next)=>{
 }
 
 exports.createProfilePost = async (req, res, next)=>{
-    
     const errors = validationResult(req).formatWith(helper.validationErrorformatter)
     if(!errors.isEmpty()){
+
+        if(req.file){
+            fs.unlinkSync('public/uploads/'+req.file.filename)
+        }
+
         req.flash('error', 'Validation error occured');
         return res.render('pages/dashboard/create-profile',{
             title: "Create Profile",
@@ -65,6 +69,7 @@ exports.createProfilePost = async (req, res, next)=>{
                 {$set: {profile: userProfile._id}}
             )
 
+            await uploadPhoto(req, userProfile._id)
 
             req.flash('success', 'Profile created successfully');
             res.redirect('/dashboard');
@@ -79,26 +84,9 @@ exports.uploadProfilePhoto = async (req, res, next)=>{
 
     if(req.file){
         try{
-            let profilePic = '/uploads/'+req.file.filename
-            await userModel.findByIdAndUpdate(
-                req.user._id, 
-                {$set: {profilePic: profilePic}}
-            )
+            let result = await uploadPhoto(req, req.user.profile);
 
-            let profile = await userProfileModel.findOne({user:req.user._id})
-            if(profile){
-                await userProfileModel.findByIdAndUpdate(
-                    profile._id, 
-                    {$set: {profilePic: profilePic}}
-                )
-            }
-
-            if( req.user.profilePic !== defaultPhoto ){
-                var filePath = `public${req.user.profilePic}`; 
-                fs.unlinkSync(filePath);
-            }
-
-            req.flash('success', 'Profile photo uploaded successfully');
+            req.flash(result.type, result.message);
             res.redirect('back');
         }
         catch(e){
@@ -121,7 +109,9 @@ exports.removeProfilePhoto = async (req, res, next)=>{
 
     try{
         var filePath = `public${req.user.profilePic}`; 
-        fs.unlinkSync(filePath);
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        }
 
         await userModel.findByIdAndUpdate(
             req.user._id, 
@@ -143,7 +133,6 @@ exports.removeProfilePhoto = async (req, res, next)=>{
         next(e);
     }
 
-
 }
 
 exports.editProfile = async (req, res, next)=>{
@@ -152,6 +141,10 @@ exports.editProfile = async (req, res, next)=>{
         userProfile.github   = userProfile.links.github ? userProfile.links.github : ''
         userProfile.twitter  = userProfile.links.twitter ? userProfile.links.twitter : ''
         userProfile.website  = userProfile.links.website ? userProfile.links.website : ''
+
+        if (!fs.existsSync(`public${userProfile.profilePic}`)) {
+            userProfile.profilePic = defaultPhoto
+        }
 
     res.render('pages/dashboard/edit-profile',{
         title: "Edit Profile",
@@ -197,5 +190,49 @@ exports.updateProfile = async (req, res, next)=>{
         catch(e){
             next(e);
         }
+    }
+}
+
+uploadPhoto = async (req, profileId)=>{
+
+    if(req.file){
+        try{
+            let profilePic = '/uploads/'+req.file.filename
+            await userModel.findByIdAndUpdate(
+                req.user._id, 
+                {$set: {profilePic: profilePic}}
+            )
+
+            await userProfileModel.findByIdAndUpdate(
+                profileId, 
+                {$set: {profilePic: profilePic}}
+            )
+
+            if( req.user.profilePic !== defaultPhoto ){
+                var filePath = `public${req.user.profilePic}`; 
+                if (fs.existsSync(filePath)) {
+                    fs.unlinkSync(filePath);
+                }
+            }
+
+            return {
+                type: 'success',
+                message: 'Profile photo uploaded successfully'
+            }
+
+        }
+        catch(e){
+            return {
+                type: 'error',
+                message: e.message,
+                filename: profilePic
+            }
+        }
+    }
+    else{
+        return {
+            type: 'error',
+            message: 'Photo no uploaded, maybe something went wrong'
+        }        
     }
 }

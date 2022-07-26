@@ -8,11 +8,13 @@
         <form action="/dashboard/upload-profile-photo" method="post" id="uplaod-profile-photo" enctype="multipart/form-data">
             <div class="row mb-3">        
                 <div class="text-center">
-                    <img src="<%= user.profilePic  %>" width="120" alt="">
+                    <img src="<%= value.profilePic  %>" width="120" alt="">
                     <input type="file" class="d-none" name="profile-photo" id="profile-photo" onchange="$('#uplaod-profile-photo').submit();" accept="image/*" required>
                     <div class="mt-2">
                         <button class="btn btn-sm btn-primary" type="button" id="choose-photo" onclick="$('#profile-photo').click();">Change</button>
+                        <% if(userDefaultPhoto !== value.profilePic){ %> 
                         <a href="/dashboard/remove-profile-photo" class="btn btn-sm btn-danger">Remove</a>
+                        <% } %> 
                     </div>
                 </div>
             </div>
