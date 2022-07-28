@@ -12,6 +12,10 @@ module.exports = (page) =>{
                 return res.redirect('/dashboard/edit-profile');
             }
 
+            if(page === 'edit-profile' && !profile){
+                return res.redirect('/dashboard/create-profile');
+            }
+
             next();
 
         }

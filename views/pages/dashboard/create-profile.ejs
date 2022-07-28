@@ -4,20 +4,7 @@
     <div class="container">
         <h4>Create Profile</h4>
         <p class="text-danger">All fields are required</p>
-
-        <form action="/dashboard/upload-profile-photo" method="post" id="uplaod-profile-photo" enctype="multipart/form-data">
-            <div class="row mb-3">        
-                <div class="text-center">
-                    <img src="<%= user.profilePic  %>" class="rounded" width="120" alt="">
-                    <input type="file" class="d-none" name="profile-photo" id="profile-photo" onchange="$('#uplaod-profile-photo').submit();" accept="image/*" required>
-                    <div class="mt-2">
-                        <button class="btn btn-sm btn-primary" type="button" id="choose-photo" onclick="$('#profile-photo').click();">Choose Photo</button>
-                    </div>
-                </div>
-            </div>
-        </form>
-
-        <form action="/dashboard/create-profile" method="post" id="create-profile">
+        <form action="/dashboard/create-profile" method="post" id="create-profile" enctype="multipart/form-data">
             <div class="row">        
                 <div class="col-md-6">
                     <div class="form-group">
@@ -98,6 +85,17 @@
 
                         <div class="invalid-feedback">
                             <%= errors.website ? errors.website : '' %>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="">Profile Photo</label>
+                        <input type="file" class="bt-form-control <%= errors.profile_photo ? 'is-invalid error' : '' %>" name="profile_photo" required accept="image/*" />
+
+                        <div class="invalid-feedback">
+                            <%= errors.profile_photo ? errors.profile_photo : '' %>
                         </div>
                     </div>
                 </div>
