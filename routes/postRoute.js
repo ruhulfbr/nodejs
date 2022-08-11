@@ -3,7 +3,7 @@ const {isAuthenticated} = require('../middleware/authMiddleware')
 
 const upload = require('../middleware/uploadMiddleware')
 
-router.get('/', isAuthenticated, createProfileMiddleWare('dashboard'), dashboardController.dashboard)
+// router.get('/', isAuthenticated, createProfileMiddleWare('dashboard'), dashboardController.dashboard)
 
 
 
