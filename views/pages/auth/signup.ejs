@@ -13,7 +13,7 @@
                     <div class="row">
                         <div class="col-md-12 form-group">
                             <label for="username">Username (Must be unique)</label>
-                            <input type="text" id="username" name="username" value="<%= value.username ? value.username : '' %>" class="form-control form-control-lg <%= errors.username ? 'is-invalid error' : '' %>" required />
+                            <input type="text" id="username" name="username" value="<%= value.username ? value.username : '' %>" class="form-control form-control-lg <%= errors.username ? 'is-invalid error' : '' %>" required autocomplete="new-username" />
 
                             <div class="invalid-feedback">
                                 <%= errors.username ? errors.username : '' %>
