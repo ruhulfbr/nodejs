@@ -15,6 +15,6 @@ module.exports = () =>{
         }
         res.locals.user = req.user
 
-        next()
+        next();
     }
 }
