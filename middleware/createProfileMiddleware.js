@@ -17,11 +17,9 @@ module.exports = (page) =>{
             }
 
             next();
-
         }
         catch(e){
             next(e);
         }
-
     }
 }
