@@ -4,7 +4,7 @@ const Flash = require('../utils/Flash')
 const helper = require('../helpers/appHelper');
 
 const userModel = require('../models/User')
-const userProfileModel = require('../models/Profile');
+const postModel = require('../models/Post');
 const { set } = require('mongoose');
 const fs = require('fs');
 
@@ -12,15 +12,23 @@ const fs = require('fs');
 //Some Constant
 let defaultPhoto = '/uploads/nophoto.jpg';
 
-exports.dashboard = (req, res, next)=>{
-    res.render('pages/dashboard/index',{
-        title: "Dashboard",
+exports.list = (req, res, next)=>{
+    res.render('pages/post/index',{
+        title: "Posts",
         errors:{},
         value: {}
     })
 }
 
-exports.createProfile = (req, res, next)=>{
+exports.view = (req, res, next)=>{
+    res.render('pages/post/index',{
+        title: "Post Details",
+        errors:{},
+        value: {}
+    })
+}
+
+exports.create = (req, res, next)=>{
     res.render('pages/dashboard/create-profile',{
         title: "Create Profile",
         errors:{},
@@ -28,7 +36,7 @@ exports.createProfile = (req, res, next)=>{
     })
 }
 
-exports.createProfilePost = async (req, res, next)=>{
+exports.createPost = async (req, res, next)=>{
     const errors = validationResult(req).formatWith(helper.validationErrorformatter)
     if(!errors.isEmpty()){
 
@@ -80,62 +88,7 @@ exports.createProfilePost = async (req, res, next)=>{
     }
 }
 
-exports.uploadProfilePhoto = async (req, res, next)=>{
-
-    if(req.file){
-        try{
-            let result = await uploadPhoto(req, req.user.profile);
-
-            req.flash(result.type, result.message);
-            res.redirect('back');
-        }
-        catch(e){
-            next(e);
-        }
-
-    }
-    else{
-        req.flash('error', 'Photo no uploaded, maybe something went wrong');
-        return res.render('pages/dashboard/create-profile',{
-            title: "Create Profile",
-            errors:{},
-            value: {},
-            flashMessage: Flash.getMessage(req)
-        })
-    }
-}
-
-exports.removeProfilePhoto = async (req, res, next)=>{
-
-    try{
-        var filePath = `public${req.user.profilePic}`; 
-        if (fs.existsSync(filePath)) {
-            fs.unlinkSync(filePath);
-        }
-
-        await userModel.findByIdAndUpdate(
-            req.user._id, 
-            {$set: {profilePic: defaultPhoto}}
-        )
-
-        let profile = await userProfileModel.findOne({user:req.user._id})
-        if(profile){
-            await userProfileModel.findByIdAndUpdate(
-                profile._id, 
-                {$set: {profilePic: defaultPhoto}}
-            )
-        }
-
-        req.flash('success', 'Profile remove successfully');
-        res.redirect('/dashboard/edit-profile');
-    }
-    catch(e){
-        next(e);
-    }
-
-}
-
-exports.editProfile = async (req, res, next)=>{
+exports.edit = async (req, res, next)=>{
     let userProfile = await userProfileModel.findOne({user: req.user._id});
         userProfile.facebook = userProfile.links.facebook ? userProfile.links.facebook : '';
         userProfile.github   = userProfile.links.github ? userProfile.links.github : ''
@@ -153,7 +106,7 @@ exports.editProfile = async (req, res, next)=>{
     })
 }
 
-exports.updateProfile = async (req, res, next)=>{
+exports.updatePost = async (req, res, next)=>{
     
     const errors = validationResult(req).formatWith(helper.validationErrorformatter)
     if(!errors.isEmpty()){

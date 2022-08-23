@@ -14,7 +14,7 @@ const routes = [
         handler: dashboardRoute
     },
     {
-        path: '/post',
+        path: '/posts',
         handler: postRoute
     },
     {
